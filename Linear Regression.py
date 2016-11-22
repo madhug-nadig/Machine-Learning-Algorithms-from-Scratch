@@ -1,12 +1,22 @@
+#================================================================================================================
+#----------------------------------------------------------------------------------------------------------------
+#											LINEAR REGRESSION
+#----------------------------------------------------------------------------------------------------------------
+#================================================================================================================
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import style
 
+#for plotting
 plt.style.use('ggplot')
 
+
+#takes in input from the user
 x = list(map(int, input("Enter x: \n").split()))
 y = list(map(int, input("Enter y: \n").split()))
 
+#convert to an numpy array with datatype as 64 bit float.
 x = np.array(x, dtype = np.float64)
 y = np.array(y, dtype = np.float64)
 
