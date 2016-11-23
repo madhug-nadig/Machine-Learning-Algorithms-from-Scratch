@@ -20,42 +20,54 @@ import quandl
 #for plotting
 plt.style.use('ggplot')
 
-#arithmetic mean
-def am(arr):
-	tot = 0.0
-	for i in arr:
-		tot+= i
-	return tot/len(arr)
-
-#finding the slope in best fit line
-def best_fit(dimOne, dimTwo):
-	return  ( (am(dimOne) * am(dimTwo) ) - am(dimOne*dimTwo) ) / ( am(dimOne)**2 - am(dimOne**2) )
-
-#finding the best fit intercept
-def y_intercept(m, dimOne ,dimTwo):
-	return am( dimTwo ) - ( m* am(dimOne) )
-
-#predict for future values based on model
-def predict(ip, slope, intercept):
-	ip = np.array(ip)
-	predicted = [(slope*param) + intercept for param in ip]
-	return predicted
+class CustomLinearRegression:
 	
-#find the squared error
-def squared_error(original, model):
-	return sum((model - original) **2)
+	def __init__(self):
+		self.intercept = 0
+		self.slope = 0
 
-#find co-efficient of determination for R^2
-def cod(original, model):
-	am_line = [am(original) for y in original]
-	sq_error = squared_error(original, model)
-	sq_error_am = squared_error(original, am_line)
-	return 1 - (sq_error/sq_error_am)
+	#arithmetic mean
+	def am(self, arr):
+		tot = 0.0
+		for i in arr:
+			tot+= i
+		return tot/len(arr)
+
+	#finding the slope in best fit line
+	def best_fit(self, dimOne, dimTwo):
+		self.slope = ( (self.am(dimOne) * self.am(dimTwo) ) - self.am(dimOne*dimTwo) ) / ( self.am(dimOne)**2 - self.am(dimOne**2) )
+		return self.slope
+
+	#finding the best fit intercept
+	def y_intercept(self, dimOne ,dimTwo):
+		self.intercept = self.am( dimTwo ) - ( self.slope * self.am(dimOne) )
+		return self.intercept
+
+	#predict for future values based on model
+	def predict(self, ip):
+		ip = np.array(ip)
+		predicted = [(self.slope*param) + self.intercept for param in ip]
+		return predicted
+		
+	#find the squared error
+	def squared_error(self, original, model):
+		return sum((model - original) **2)
+
+	#find co-efficient of determination for R^2
+	def cod(self, original, model):
+		am_line = [self.am(original) for y in original]
+		sq_error = self.squared_error(original, model)
+		sq_error_am = self.squared_error(original, am_line)
+		return 1 - (sq_error/sq_error_am)
 
 def main():
 	stk = quandl.get("WIKI/TSLA")
 
+	simpl_linear_regression = CustomLinearRegression()
+
+	#reset index to procure date - date was the initial default index
 	stk = stk.reset_index()
+	
 	#Add them headers
 	stk = stk[['Date','Adj. Open','Adj. High','Adj. Low','Adj. Close', 'Volume']]
 
@@ -82,22 +94,22 @@ def main():
 
 	stk.dropna(inplace = True)
 
-	#x = np.array(stk['Adj. Open'])
 	x = np.array(stk['Date'])
-
 	y = np.array(stk['label'])
 
-	slope = best_fit(x, y) #find slope
-	intercept = y_intercept(slope, x, y) #find the intercept
+	#Always in the order: first slope, then intercept
+	slope = simpl_linear_regression.best_fit(x, y) #find slope
+	intercept = simpl_linear_regression.y_intercept(x, y) #find the intercept
 
 	ip = list(map(int, input("Enter x to predict y: \n").split()))
 
-	line = predict(ip, slope, intercept) #predict based on model
+	line = simpl_linear_regression.predict(ip) #predict based on model
+	
 	reg = [(slope*param) + intercept for param in x]
 
 	print("Predicted value(s) after linear regression :", line)
 
-	r_sqrd = cod(y, reg)
+	r_sqrd = simpl_linear_regression.cod(y, reg)
 	print("R^2 Value: " ,r_sqrd)
 	
 	plt.scatter(x, y)
