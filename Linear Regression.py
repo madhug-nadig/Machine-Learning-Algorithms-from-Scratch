@@ -1,25 +1,24 @@
 #================================================================================================================
 #----------------------------------------------------------------------------------------------------------------
-#											LINEAR REGRESSION
+#											SIMPLE LINEAR REGRESSION
 #----------------------------------------------------------------------------------------------------------------
 #================================================================================================================
 
+#Simple linear regression is applied to stock data, where the x values are time and y values are the stock closing price.
+#This is not an ideal application of simple linear regression, but it suffices to be a good experiment.
+
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import style
+import pandas
+import datetime
+
+#Quandl for getting stock data
+import quandl
 
 #for plotting
 plt.style.use('ggplot')
-
-
-#takes in input from the user
-x = list(map(int, input("Enter x: \n").split()))
-y = list(map(int, input("Enter y: \n").split()))
-
-#convert to an numpy array with datatype as 64 bit float.
-x = np.array(x, dtype = np.float64)
-y = np.array(y, dtype = np.float64)
-
 
 #arithmetic mean
 def am(arr):
@@ -54,6 +53,40 @@ def cod(original, model):
 	return 1 - (sq_error/sq_error_am)
 
 def main():
+	stk = quandl.get("WIKI/TSLA")
+
+	stk = stk.reset_index()
+	#Add them headers
+	stk = stk[['Date','Adj. Open','Adj. High','Adj. Low','Adj. Close', 'Volume']]
+
+	stk['Date'] = pandas.to_datetime(stk['Date'])    
+	stk['Date'] = (stk['Date'] - stk['Date'].min())  / np.timedelta64(1,'D')
+
+
+	#The column that needs to be forcasted using linear regression
+	forecast_col = 'Adj. Close'
+	stk.fillna(-999999, inplace = True)
+
+	stk['label'] = stk[forecast_col]
+
+
+	#IN CASE THE INPUT IS TO BE TAKEN IN FROM THE COMMAN PROMPT
+
+	#takes in input from the user
+	#x = list(map(int, input("Enter x: \n").split()))
+	#y = list(map(int, input("Enter y: \n").split()))
+
+	#convert to an numpy array with datatype as 64 bit float.
+	#x = np.array(x, dtype = np.float64)
+	#y = np.array(y, dtype = np.float64)
+
+	stk.dropna(inplace = True)
+
+	#x = np.array(stk['Adj. Open'])
+	x = np.array(stk['Date'])
+
+	y = np.array(stk['label'])
+
 	slope = best_fit(x, y) #find slope
 	intercept = y_intercept(slope, x, y) #find the intercept
 
