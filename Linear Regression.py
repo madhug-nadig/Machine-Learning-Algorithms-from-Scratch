@@ -82,7 +82,7 @@ def main():
 	stk['label'] = stk[forecast_col]
 
 
-	#IN CASE THE INPUT IS TO BE TAKEN IN FROM THE COMMAN PROMPT
+	#IN CASE THE INPUT IS TO BE TAKEN IN FROM THE COMMAND PROMPT
 
 	#takes in input from the user
 	#x = list(map(int, input("Enter x: \n").split()))
