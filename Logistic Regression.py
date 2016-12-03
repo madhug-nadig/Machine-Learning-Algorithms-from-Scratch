@@ -31,14 +31,34 @@ class CustomLogisticRegression:
 		#initialie theta
 		self.theta = np.random.rand(x.shape[1],1)
 	
-	#Gradient function
-	def gradients():
+	#the cost function
+	def cost_fn(self, shapd_x, x, y):
 		pass
+
+	#The sigmoid function
+	def sigmoid_function(z):
+		return 1.0 / ( 1.0 + math.e**(-1*z) ) #Using 1.0 to make it a floating point type
+	
+	#Gradient function
+	def gradients(self, shapd_x, x, y):
+		zrd = self.theta
+		zrd[0, :] = 0
+		h = sigmoid_function(np.dot(x, self.theta))
+		return ( 1.0/m ) * np.dot(x.T, ( h - y ) ) + (float(self.lambd)/m) * zrd
 
 	#This is batch
 	def descent(self, x, y):
 		for i in range(self.iter):
-			gradientz = gradients(x.shape[0], self.lambd, self.theta,x , y)
+			self.cost.append( cost_fn(x.shape[0], x, y))
+			gradientz = gradients(x.shape[0], x , y)
+			
+			#Change theta based on the "gradientz"
+			self.theta[0, :] = gradientz[0, :] - self.alpha * gradientz[0, :]
+			self.theta[1, :] = gradientz[1:, :] - self.alpha * gradientz[1:, :]
+		
+		pred = np.dot(x, self.theta)
+		pred[ pred >= 0.5 ] = 1
+		pred[ pred < 0.5 ] = 0
 
 def main():
 
