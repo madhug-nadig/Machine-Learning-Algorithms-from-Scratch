@@ -31,8 +31,14 @@ class CustomLogisticRegression:
 		#initialie theta
 		self.theta = np.random.rand(x.shape[1],1)
 	
-	def descent(self, x, y):
+	#Gradient function
+	def gradients():
 		pass
+
+	#This is batch
+	def descent(self, x, y):
+		for i in range(self.iter):
+			gradientz = gradients(x.shape[0], self.lambd, self.theta,x , y)
 
 def main():
 
@@ -52,9 +58,10 @@ def main():
 	x = [:,:2]
 	
 	#normalize the data
+	df = (df - df.mean()) / (df.max() - df.min())
+
 	
-	x_test, y_test, x_train, y_train = train_test_split(x,y, test_size = 0.2, random_state = 0)
-	
+	x_test, y_test, x_train, y_train = train_test_split(x,y, test_size = 0.1, random_state = 0)
 	
 	glm = CustomLogisticRegression(x, y)
 
