@@ -1,6 +1,6 @@
 #================================================================================================================
 #----------------------------------------------------------------------------------------------------------------
-#											SIMPLE LINEAR REGRESSION
+#									SIMPLE LINEAR REGRESSION
 #----------------------------------------------------------------------------------------------------------------
 #================================================================================================================
 
@@ -35,7 +35,7 @@ class CustomLinearRegression:
 
 	#finding the slope in best fit line
 	def best_fit(self, dimOne, dimTwo):
-		self.slope = ( (self.am(dimOne) * self.am(dimTwo) ) - self.am(dimOne*dimTwo) ) / ( self.am(dimOne)**2 - self.am(dimOne**2) )
+		self.slope = ( (self.am(dimOne) * self.am(dimTwo) ) - self.am(dimOne*dimTwo) ) / ( self.am(dimOne)**2 - self.am(dimOne**2) ) #formula for finding slope
 		return self.slope
 
 	#finding the best fit intercept
@@ -46,7 +46,7 @@ class CustomLinearRegression:
 	#predict for future values based on model
 	def predict(self, ip):
 		ip = np.array(ip)
-		predicted = [(self.slope*param) + self.intercept for param in ip]
+		predicted = [(self.slope*param) + self.intercept for param in ip] #create a "predicted" array where the index corresponds to the index of the input
 		return predicted
 		
 	#find the squared error
@@ -58,7 +58,7 @@ class CustomLinearRegression:
 		am_line = [self.am(original) for y in original]
 		sq_error = self.squared_error(original, model)
 		sq_error_am = self.squared_error(original, am_line)
-		return 1 - (sq_error/sq_error_am)
+		return 1 - (sq_error/sq_error_am) #R^2 is nothing but 1 - of squared error for our model / squared error if the model only consisted of the mean
 
 def main():
 	stk = quandl.get("WIKI/TSLA")
@@ -77,12 +77,13 @@ def main():
 
 	#The column that needs to be forcasted using linear regression
 	forecast_col = 'Adj. Close'
+	
+	#take care of NA's
 	stk.fillna(-999999, inplace = True)
-
 	stk['label'] = stk[forecast_col]
 
 
-	#IN CASE THE INPUT IS TO BE TAKEN IN FROM THE COMMAND PROMPT
+	#IN CASE THE INPUT IS TO BE TAKEN IN FROM THE COMMAND PROMPT UNCOMMENT THE LINES BELOW
 
 	#takes in input from the user
 	#x = list(map(int, input("Enter x: \n").split()))
