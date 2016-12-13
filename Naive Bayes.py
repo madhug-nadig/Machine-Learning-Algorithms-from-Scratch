@@ -10,7 +10,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import style
-import pandas
+import pandas as pd
 import nltk
 import re
 
@@ -22,9 +22,21 @@ class CustomNB:
 	def __init__(self):
 		pass
 	
-	def create_freq_table(texts, labels=None, parse=False):
-		pass
-	
+	def create_freq_table(self, texts, labels=None):
+		#create the dataframe
+		ft = pd.DataFrame([])
+		#iterate through them emails
+		for index, trm in enumerate(texts):
+			vocabulary = set(trm) #all the words of the email
+			#amount of times each word occurs in the dictionary
+			freq_dict = pd.Series({ v : trm.count(v) for v in vocabulary})
+			
+			if labels!=None:
+				freq_dict['CLASS'] = labels[index]
+				ft = ft.append(freq_dict, ignore_index=True)
+		ft = ft.fillna(0)
+		return 	ft
+
 	def train(freq):
 		pass
 	
@@ -40,7 +52,7 @@ def main():
 			"Open the Pod bay doors, HAL." , " I'm sorry, Dave. I'm afraid I can't do that."]}
 	t= []
 	labl = []
-		
+
 	for k in emails:
 		for mail in emails[k]:
 			tokens = [word.lower() for sent in nltk.sent_tokenize(mail) for word in nltk.word_tokenize(sent)]
@@ -52,8 +64,10 @@ def main():
 			t.append(' '.join(filtered_tokens))
 			labl.append(k)
 
-	print(labl, t)
+	print(labl,t)
 	nb = CustomNB()
+	print(nb.create_freq_table(t, labl))
+	
 
 if __name__ == "__main__":
 	main()
