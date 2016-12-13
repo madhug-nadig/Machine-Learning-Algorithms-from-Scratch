@@ -27,10 +27,10 @@ class CustomNB:
 		ft = pd.DataFrame([])
 		#iterate through them emails
 		for index, trm in enumerate(texts):
-			vocabulary = set(trm) #all the words of the email
+			vocabulary = trm #all the words of the email
 			#amount of times each word occurs in the dictionary
 			freq_dict = pd.Series({ v : trm.count(v) for v in vocabulary})
-			
+
 			if labels!=None:
 				freq_dict['CLASS'] = labels[index]
 				ft = ft.append(freq_dict, ignore_index=True)
@@ -63,10 +63,13 @@ def main():
 					filtered_tokens.append(token)
 			t.append(' '.join(filtered_tokens))
 			labl.append(k)
-
+	for i in range(len(t)):
+		t[i] = t[i].split()
+	
 	print(labl,t)
 	nb = CustomNB()
-	print(nb.create_freq_table(t, labl))
+	freq_table = nb.create_freq_table(t, labl)
+	print(freq_table)
 	
 
 if __name__ == "__main__":
