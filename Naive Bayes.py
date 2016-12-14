@@ -37,9 +37,22 @@ class CustomNB:
 		ft = ft.fillna(0)
 		return 	ft
 
-	def train(freq):
-		pass
-	
+	def train(self, freq):
+		fq = freq.iloc[:,1:]
+		labels = fq.iloc[:, 0].values
+		vocabulary = list(fq.columns.values)
+		s, ns = pd.DataFrame([]), pd.DataFrame([])
+		for index, rw in fq.iterrows():
+			if labels[index] == 1:
+				s = s.append(rw)
+			else:
+				ns = ns.append(rw)
+		
+		swc = sum([word for word in s.sum()])
+		nswc = sum([word for word in ns.sum()])
+		print(s,'\n',ns)
+		print(swc, nswc)
+
 	def predict(text, prob_o_spam, prob_o_not_spam):
 		pass
 
@@ -66,10 +79,9 @@ def main():
 	for i in range(len(t)):
 		t[i] = t[i].split()
 	
-	print(labl,t)
 	nb = CustomNB()
 	freq_table = nb.create_freq_table(t, labl)
-	print(freq_table)
+	nb.train(freq_table)
 	
 
 if __name__ == "__main__":
