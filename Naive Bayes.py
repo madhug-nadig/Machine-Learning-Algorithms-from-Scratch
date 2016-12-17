@@ -50,8 +50,20 @@ class CustomNB:
 		
 		swc = sum([word for word in s.sum()])
 		nswc = sum([word for word in ns.sum()])
-		print(s,'\n',ns)
-		print(swc, nswc)
+		
+		#Create the dicts for storing the model
+		non_spam_model, spam_model = {}, {}
+		
+		alpha = 0.5
+		for word in vocabulary:
+			spam_occurances = s[word].sum()
+			non_spam_occurances = ns[word].sum()
+			#Now, the crux of the algo, the bayesian probablity
+			bayesian_probablity_for_spam = ( spam_occurances + alpha ) / ( swc )
+			bayesian_probablity_for_non_spam = ( non_spam_occurances + alpha ) / ( nswc )
+			#Update the model
+			non_spam_model[word], spam_model[word] = bayesian_probablity_for_spam , bayesian_probablity_for_non_spam
+		print(non_spam_model)
 
 	def predict(text, prob_o_spam, prob_o_not_spam):
 		pass
