@@ -63,10 +63,23 @@ class CustomNB:
 			bayesian_probablity_for_non_spam = ( non_spam_occurances + alpha ) / ( nswc )
 			#Update the model
 			non_spam_model[word], spam_model[word] = bayesian_probablity_for_spam , bayesian_probablity_for_non_spam
-		print(non_spam_model)
+		
+		return spam_model, non_spam_model
 
-	def predict(text, prob_o_spam, prob_o_not_spam):
-		pass
+	def predict(self, text, spam_model,non_model):
+		text = [x for x in text.replace('\n', ' ')]
+		f_table = self.create_freq_table(text)
+		vacoabular = f_table.columns.values
+		
+		spam_prob = 0
+		non_spam_prob = 0
+				
+		for word in vocabulary:
+			if word in spam_model:
+				spam_prob += spam_model[word]
+			elif word in non_spam_model:
+				non_spam_prob += non_spam_model[word]
+		return int( (spam_prob / non_spam_prob) >= 1)
 
 def main():
 	
@@ -92,8 +105,11 @@ def main():
 		t[i] = t[i].split()
 	
 	nb = CustomNB()
+
 	freq_table = nb.create_freq_table(t, labl)
-	nb.train(freq_table)
+	sp, nsp = nb.train(freq_table)
+	
+	nb.predict("Dear friend, win 1000$ cash right now!!.", sp, nsp)
 	
 
 if __name__ == "__main__":
