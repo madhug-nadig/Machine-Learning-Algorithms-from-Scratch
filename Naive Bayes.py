@@ -33,7 +33,7 @@ class CustomNB:
 
 			if labels!=None:
 				freq_dict['CLASS'] = labels[index]
-				ft = ft.append(freq_dict, ignore_index=True)
+			ft = ft.append(freq_dict, ignore_index=True)
 		ft = ft.fillna(0)
 		return 	ft
 
@@ -66,19 +66,22 @@ class CustomNB:
 		
 		return spam_model, non_spam_model
 
-	def predict(self, text, spam_model,non_model):
+	def predict(self, text, spam_model,non_spam_model):
 		text = [x for x in text.replace('\n', ' ')]
+		text = [''.join(text).split()]
 		f_table = self.create_freq_table(text)
-		vacoabular = f_table.columns.values
+		vocabulary = f_table.columns.values
 		
 		spam_prob = 0
 		non_spam_prob = 0
-				
+		
 		for word in vocabulary:
 			if word in spam_model:
 				spam_prob += spam_model[word]
 			elif word in non_spam_model:
 				non_spam_prob += non_spam_model[word]
+		print(non_spam_model)
+		print(spam_prob, non_spam_prob)
 		return int( (spam_prob / non_spam_prob) >= 1)
 
 def main():
@@ -105,12 +108,18 @@ def main():
 		t[i] = t[i].split()
 	
 	nb = CustomNB()
-
 	freq_table = nb.create_freq_table(t, labl)
 	sp, nsp = nb.train(freq_table)
-	
-	nb.predict("Dear friend, win 1000$ cash right now!!.", sp, nsp)
-	
+	#ip = "Hey, Can you redo the presentation and send it on by Friday?"
+	#ip = "Webcams Day & Night - All LIVE - Webcams Contest"
+	#ip = "Dear friend, win 1000$ cash right now!!"
+	propr_ip = []
+	for ch in nltk.word_tokenize(ip):
+		if re.search('[a-zA-Z]', ch):
+			propr_ip.append(ch.lower())
+	propr_ip = ' '.join(propr_ip)
+	x = nb.predict(propr_ip, sp, nsp)
+	print(x)
 
 if __name__ == "__main__":
 	main()
