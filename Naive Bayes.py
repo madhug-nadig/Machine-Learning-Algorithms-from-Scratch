@@ -78,11 +78,11 @@ class CustomNB:
 		for word in vocabulary:
 			if word in spam_model:
 				spam_prob += spam_model[word]
-			elif word in non_spam_model:
+			if word in non_spam_model:
 				non_spam_prob += non_spam_model[word]
-		print(non_spam_model)
+
 		print(spam_prob, non_spam_prob)
-		return int( (spam_prob / non_spam_prob) >= 1)
+		return (spam_prob / non_spam_prob)
 
 def main():
 	
@@ -112,14 +112,21 @@ def main():
 	sp, nsp = nb.train(freq_table)
 	#ip = "Hey, Can you redo the presentation and send it on by Friday?"
 	#ip = "Webcams Day & Night - All LIVE - Webcams Contest"
-	#ip = "Dear friend, win 1000$ cash right now!!"
+	ip = "Open the Pod bay doors, HAL."
+	#ip = "I'm sorry, Dave. I'm afraid I can't do that."
+	
 	propr_ip = []
 	for ch in nltk.word_tokenize(ip):
 		if re.search('[a-zA-Z]', ch):
 			propr_ip.append(ch.lower())
 	propr_ip = ' '.join(propr_ip)
 	x = nb.predict(propr_ip, sp, nsp)
+
 	print(x)
+	if x < 0.5:
+		print("spam")
+	else:
+		print("not spam")
 
 if __name__ == "__main__":
 	main()
