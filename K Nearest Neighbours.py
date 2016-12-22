@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import pandas as pd
 import random
+from collections import Counter
 
 #for plotting
 plt.style.use('ggplot')
@@ -18,7 +19,35 @@ plt.style.use('ggplot')
 class CustomKNN:
 	
 	def __init__(self):
-		pass
+		self.accurate_predictions = 0
+		self.total_predictions = 0
+	
+	def predict(self, training_data, to_predict, k = 3):
+		if len(training_data) >= k:
+			print("K cannot be smaller than the total voting groups(ie. number of training data)")
+			return
+		
+		distributions = []
+		for group in training_data:
+			for features in training_data[group]:
+				euclidean_distance = np.linalg.norm(np.array(features)- np.array(to_predict))
+				distributions.append([euclidean_distance, group])
+		
+			results = [i[1] for i in sorted(distributions)[:k]]
+			result = Counter(results).most_common(1)[0][0]
+			confidence = Counter(results).most_common(1)[0][1]/k
+		
+		return result, confidence
+	
+	def test(self, test_set, training_set):
+		for group in test_set:
+			for data in test_set[group]:
+				predicted_class,confidence = self.predict(training_set, data, k =3)
+				if predicted_class == group:
+					self.accurate_predictions += 1
+				else:
+					print("Wrong classification with confidence " + str(confidence * 100) + " and class " + str(predicted_class))
+				self.total_predictions += 1
 
 def mod_data(df):
 	df.replace('?', -999999, inplace = True)
@@ -66,6 +95,7 @@ def main():
 		test_set[record[-1]].append(record[:-1]) # Append the list in the dict will all the elements of the record except the class
 
 	knn = CustomKNN()
+	knn.test(test_set, training_set)
 
 if __name__ == "__main__":
 	main()
