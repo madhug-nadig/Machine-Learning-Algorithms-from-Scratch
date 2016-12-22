@@ -21,7 +21,8 @@ class CustomKNN:
 	def __init__(self):
 		self.accurate_predictions = 0
 		self.total_predictions = 0
-	
+		self.accuracy = 0.0
+
 	def predict(self, training_data, to_predict, k = 3):
 		if len(training_data) >= k:
 			print("K cannot be smaller than the total voting groups(ie. number of training data)")
@@ -48,6 +49,8 @@ class CustomKNN:
 				else:
 					print("Wrong classification with confidence " + str(confidence * 100) + " and class " + str(predicted_class))
 				self.total_predictions += 1
+		self.accuracy = 100*(self.accurate_predictions/self.total_predictions)
+		print("\nAcurracy :", str(self.accuracy) + "%")
 
 def mod_data(df):
 	df.replace('?', -999999, inplace = True)
