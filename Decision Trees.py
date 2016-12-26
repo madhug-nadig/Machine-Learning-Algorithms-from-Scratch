@@ -18,7 +18,27 @@ class CustomDecisionTrees:
 	
 	def __init__(self):
 		pass
-	
+
+class decisionnode:
+	def __init__(self,col=‐1,value=None,results=None,tb=None,fb=None):
+		self.col=col
+		self.value=value
+		self.results=results
+		self.tb=tb
+		self.fb=fb
+		
+	def buildtree(rows,scoref=entropy):
+		if len(rows)==0: return decisionnode()
+		current_score=scoref(rows)
+		best_gain=0.0
+		best_criteria=None
+		best_sets=None
+		column_count=len(rows[0])-1
+		for col in range(0,column_count):
+		column_values={}
+		for row in rows:
+		column_values[row[col]]=1
+
 def main():
 	def entropy():
 		pass
