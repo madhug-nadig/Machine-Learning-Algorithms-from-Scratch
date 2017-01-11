@@ -12,6 +12,7 @@ from matplotlib import style
 import pandas as pd
 import random
 from collections import Counter
+from sklearn import preprocessing
 
 #for plotting
 plt.style.use('ggplot')
@@ -25,7 +26,7 @@ class CustomKNN:
 
 	def predict(self, training_data, to_predict, k = 3):
 		if len(training_data) >= k:
-			print("K cannot be smaller than the total voting groups(ie. number of training data)")
+			print("K cannot be smaller than the total voting groups(ie. number of training data points)")
 			return
 		
 		distributions = []
@@ -74,7 +75,13 @@ def main():
 	df = pd.read_csv(r".\data\chronic_kidney_disease.csv")
 	mod_data(df)
 	dataset = df.astype(float).values.tolist()
-
+	
+	#Normalize the data
+	x = df.values #returns a numpy array
+	min_max_scaler = preprocessing.MinMaxScaler()
+	x_scaled = min_max_scaler.fit_transform(x)
+	df = pd.DataFrame(x_scaled) #Replace df with normalized values
+	
 	#Shuffle the dataset
 	random.shuffle(dataset)
 
