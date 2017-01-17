@@ -20,29 +20,52 @@ class CustomDecisionTrees:
 		pass
 
 class decisionnode:
-	def __init__(self,col=‐1,value=None,results=None,tb=None,fb=None):
+	def __init__(self,col = -1,value=None,results=None,tb=None,fb=None):
 		self.col=col
 		self.value=value
 		self.results=results
 		self.tb=tb
 		self.fb=fb
 		
-	def buildtree(rows,scoref=entropy):
-		if len(rows)==0: return decisionnode()
-		current_score=scoref(rows)
+	def buildtree(rows,scoref = entropy):
+		
+		if len(rows)==0: 
+			return decisionnode()
+		
+		current_score = scoref(rows)
 		best_gain=0.0
 		best_criteria=None
 		best_sets=None
 		column_count=len(rows[0])-1
+		
 		for col in range(0,column_count):
-		column_values={}
+			column_values={}
+		
 		for row in rows:
-		column_values[row[col]]=1
+			column_values[row[col]]=1
 
+		for value in column_values.keys():
+			(set1,set2) = divid(rows,col,value)
+		
+		p = float(len(set1))/len(rows) #p is the size of a child set relative to its parent
+		gain = current_score - p * scoref( set1 )-( 1 - p ) * scoref( set2 ) #cf. formula information gain
+		
+		if gain>best_gain and len(set1)>0 and len(set2)>0: #set must not be empty
+			best_gain = gain
+			best_criteria = (col,value)
+			best_sets = (set1,set2)
+		
+		
 def main():
 	def entropy():
-		pass
-	
+		log2 = lambda x:log(x)/log(2)
+		results = uniquecounts(rows)
+		
+		entropy_value = 0.0
+		for r in results.keys():
+			p = float(results[r])/len(rows)
+			entropy_value = entropy_value - p * log2(p)
+		return entropy_value
 	
 	
 	def uniquecounts(rows):
