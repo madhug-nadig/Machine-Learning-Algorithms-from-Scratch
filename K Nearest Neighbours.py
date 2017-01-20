@@ -35,9 +35,9 @@ class CustomKNN:
 				euclidean_distance = np.linalg.norm(np.array(features)- np.array(to_predict))
 				distributions.append([euclidean_distance, group])
 		
-			results = [i[1] for i in sorted(distributions)[:k]]
-			result = Counter(results).most_common(1)[0][0]
-			confidence = Counter(results).most_common(1)[0][1]/k
+		results = [i[1] for i in sorted(distributions)[:k]]
+		result = Counter(results).most_common(1)[0][0]
+		confidence = Counter(results).most_common(1)[0][1]/k
 		
 		return result, confidence
 	
