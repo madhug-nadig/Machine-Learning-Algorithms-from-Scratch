@@ -29,41 +29,40 @@ class CustomKNN:
 	def distances_for_parallel(self, features, incoming, group):
 		return (np.linalg.norm(np.array(features)- np.array(incoming)), group)
 
-	def predict(self, training_data, to_predict, k = 3):
+	def predict(self, training_data, to_predict, group, k = 3):
+		print(training_data)
+
 		if len(training_data) >= k:
 			print("K cannot be smaller than the total voting groups(ie. number of training data points)")
 			return
 		
-		pool = mp.Pool(processes= 1)
-
 		distributions = []
 		for group in training_data:
-			euclidean_distances = [ pool.starmap(self.distances_for_parallel, zip(training_data[group], repeat(to_predict), repeat(group)))]
-			for iter in euclidean_distances:
-				for j in iter:
-					distributions.append(j)
-				
+			for features in training_data[group]:
+				euclidean_distance = np.linalg.norm(np.array(features)- np.array(to_predict))
+				distributions.append([euclidean_distance, group])
 		
-		#for i in range(1, len(training_data)):	
-		#	distributions[0].extend(distributions[i])
-		
-
-		
-		results = [i for i in sorted(distributions)[:k]]
+		results = [i[1] for i in sorted(distributions)[:k]]
 		result = Counter(results).most_common(1)[0][0]
 		confidence = Counter(results).most_common(1)[0][1]/k
-		print(results)
-		return result, confidence
+		
+		if result == group:
+			self.accurate_predictions += 1
+		
+		else:
+			print("Wrong classification with confidence " + str(confidence * 100) + " and class " + str(result))
+		
+		self.total_predictions += 1
+
 	
-	def test(self, test_set, training_set):
+	def test(self, test_set, training_data):
+		pool = mp.Pool(processes= 8)
+		
+		
 		for group in test_set:
-			for data in test_set[group]:
-				predicted_class,confidence = self.predict(training_set, data, k =3)
-				if predicted_class == group:
-					self.accurate_predictions += 1
-				else:
-					print("Wrong classification with confidence " + str(confidence * 100) + " and class " + str(predicted_class))
-				self.total_predictions += 1
+
+			pool.starmap(self.predict, zip(training_data, test_set[group], repeat(group), repeat(3)))
+		
 		self.accuracy = 100*(self.accurate_predictions/self.total_predictions)
 		print("\nAcurracy :", str(self.accuracy) + "%")
 
