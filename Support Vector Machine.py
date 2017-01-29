@@ -38,7 +38,44 @@ class CustomSVM:
 		print(data)
 		self.max_attr = max(data)
 		self.min_attr = min(data)
-	
+		
+		#Clear the data from memory
+		data = None
+		
+		step_size = [self.max_attr * 0.1,self.max_attr * 0.01,self.max_attr * 0.005]
+		
+		b_range = 5
+		b_multiple = 5
+		
+		latest_optimum = self.max_attr * 10
+		
+		for step in step_size:
+			W = np.array([latest_optimum,latest_optimum])
+			opti = False
+			
+			while not opti:
+				for b in np.arange(-1*(self.max_attr* b_range ), self.max_attr * b_range, step * b_multiple):
+					for transformation in trans:
+						W_t = W * transformation
+						found = True
+						for yi, xi in self.dataset.items():
+							print(b)
+							if not (yi* np.dot(W_t , xi)+b ) >= 1:
+								found = False
+								break
+						if found:
+							options[np.linalg.norm(W_t)] = [W_t, b]
+				if W[0]<0:
+					opti = True
+					print("Optimized by a step: ", step)
+				else:
+					W -= step
+			
+			norms = min([n for n in options])
+			self.W = options[norms][0]
+			self.b = options[norms][1]
+			
+			latest_optimum = options[norm][0][0] + step*2
 
 def main():
 	svm = CustomSVM()
