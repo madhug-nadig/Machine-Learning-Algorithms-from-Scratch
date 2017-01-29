@@ -77,7 +77,14 @@ class CustomSVM:
 			
 			latest_optimum = options[norm][0][0] + step*2
 
+	def predict(self, attrs):
+		#sign of the X(i).W + b defines the class
+		classification = np.sign(np.dot(np.array(attrs), self.W) + self.b)
+		
+		return classification
+			
 def main():
+
 	svm = CustomSVM()
 
 if __name__ == "__main__":
