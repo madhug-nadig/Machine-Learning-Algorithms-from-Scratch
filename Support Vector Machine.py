@@ -85,7 +85,11 @@ class CustomSVM:
 			
 def main():
 
+	dataset = { -1 : np.array([[2,3],[4,5],[2,1]]), 1: np.array([[5,6], [8,8], [9,9]]) }
 	svm = CustomSVM()
 
+	svm.fit(dataset = dataset)
+	pred = svm.predict(attrs = [2,2])
+	
 if __name__ == "__main__":
 	main()
