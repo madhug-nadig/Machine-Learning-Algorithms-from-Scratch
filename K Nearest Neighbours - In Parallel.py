@@ -30,6 +30,7 @@ class CustomKNN:
 		return (np.linalg.norm(np.array(features)- np.array(incoming)), group)
 
 	def predict(self, training_data, to_predict, group, k = 3):
+		#training_data = dict(item for item in training_data)  # Convert back to a dict
 		print(training_data)
 
 		if len(training_data) >= k:
@@ -53,14 +54,14 @@ class CustomKNN:
 			print("Wrong classification with confidence " + str(confidence * 100) + " and class " + str(result))
 		
 		self.total_predictions += 1
-
 	
 	def test(self, test_set, training_data):
 		pool = mp.Pool(processes= 8)
-		
+
 		
 		for group in test_set:
-
+			training_data = list(training_data.items())
+			print(type(training_data))
 			pool.starmap(self.predict, zip(training_data, test_set[group], repeat(group), repeat(3)))
 		
 		self.accuracy = 100*(self.accurate_predictions/self.total_predictions)
