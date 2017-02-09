@@ -81,7 +81,7 @@ def main():
 
 		split_function=None
 
-		if isinstance(value,int) or isinstance(value,float): # check if the value is a numbe
+		if isinstance(value,int) or isinstance(value,float): # check if the value is a number
 			split_function=lambda row:row[column]>=value
 		else:
 			split_function=lambda row:row[column]==value

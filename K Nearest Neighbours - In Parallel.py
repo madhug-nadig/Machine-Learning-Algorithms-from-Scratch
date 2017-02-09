@@ -31,7 +31,6 @@ class CustomKNN:
 
 	def predict(self, training_data, to_predict, group, k = 3):
 		#training_data = dict(item for item in training_data)  # Convert back to a dict
-		print(training_data)
 
 		if len(training_data) >= k:
 			print("K cannot be smaller than the total voting groups(ie. number of training data points)")
@@ -60,9 +59,7 @@ class CustomKNN:
 
 		
 		for group in test_set:
-			training_data = list(training_data.items())
-			print(type(training_data))
-			pool.starmap(self.predict, zip(training_data, test_set[group], repeat(group), repeat(3)))
+			pool.starmap(self.predict, zip(repeat(training_data), test_set[group], repeat(group), repeat(3)))
 		
 		self.accuracy = 100*(self.accurate_predictions/self.total_predictions)
 		print("\nAcurracy :", str(self.accuracy) + "%")
