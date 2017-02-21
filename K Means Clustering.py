@@ -12,13 +12,13 @@ class K_Means:
 		#initialize the centroids, the first 'k' elements in the dataset will be our initial centroids
 		for i in range(self.k):
 			self.centroids[i] = data[i]
-		
+
 		#begin iterations
 		for i in range(self.max_iterations):
 			self.classes = {}
 			for i in range(self.k):
 				self.classes[i] = []
-			
+
 			#find the distance between the point and cluster; choose the nearest centroid
 			for features in data:
 				distances = [np.linalg.norm(features - self.centroids[centroid]) for centroid in self.centroids]
@@ -46,8 +46,9 @@ class K_Means:
 				break
 
 	def pred(self, data):
-		pass
-
+		distances = [np.linalg.norm(data - self.centroids[centroid]) for centroid in self.centroids]
+		classification = distances.index(min(distances))
+		return classification
 
 X = np.array([[1,2],[1,1],[1.5,1.4],[4,4],[4,6],[5,5],[6,8], [3,1],[2,2],[9,9],[5,5],[1,0.5],[7,7]])
 
