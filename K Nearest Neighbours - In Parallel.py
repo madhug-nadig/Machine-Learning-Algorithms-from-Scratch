@@ -46,14 +46,15 @@ class CustomKNN:
 		return result, to_predict
 	
 	def test(self, test_set, training_set):
-		pool = mp.Pool(processes= 4)
+		pool = mp.Pool(processes= 8)
 
 		arr = {}
 		s = time.clock()
 		for group in test_set:
 			arr[group] =  pool.starmap(self.predict, zip(repeat(training_set), test_set[group], repeat(3)))
-		e= time.clock()
-		print("time: ", e-s)
+		e = time.clock()
+
+		#Calculating Accuracy
 		for group in test_set:
 			for data in test_set[group]:
 				for i in arr[group]:
@@ -121,7 +122,7 @@ def main():
 	knn.test(test_set, training_set)
 	e = time.clock()
 	
-	print("Time: ", e-s)
+	print("Exec Time: ", e-s)
 	
 if __name__ == "__main__":
 	main()
