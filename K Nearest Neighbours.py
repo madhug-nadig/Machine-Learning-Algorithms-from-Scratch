@@ -13,6 +13,7 @@ import pandas as pd
 import random
 from collections import Counter
 from sklearn import preprocessing
+import time
 
 #for plotting
 plt.style.use('ggplot')
@@ -104,8 +105,11 @@ def main():
 	for record in training_data:
 		test_set[record[-1]].append(record[:-1]) # Append the list in the dict will all the elements of the record except the class
 
+	s = time.clock()
 	knn = CustomKNN()
 	knn.test(test_set, training_set)
+	e = time.clock()
+	print("Exec Time:" ,e-s)
 
 if __name__ == "__main__":
 	main()
