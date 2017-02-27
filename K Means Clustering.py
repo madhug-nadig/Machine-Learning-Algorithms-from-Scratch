@@ -1,4 +1,8 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import style
+
+style.use('ggplot')
 
 class K_Means:
 	def __init__(self, k =3, tolerance = 0.0001, max_iterations = 500):
@@ -54,3 +58,16 @@ X = np.array([[1,2],[1,1],[1.5,1.4],[4,4],[4,6],[5,5],[6,8], [3,1],[2,2],[9,9],[
 
 km = K_Means(3)
 km.fit(X)
+
+# Plotting starts here
+colors = 10*["r", "g", "c", "b", "k"]
+
+for centroid in km.centroids:
+	plt.scatter(km.centroids[centroid][0], km.centroids[centroid][1], s = 130, marker = "x")
+
+for classification in km.classes:
+	color = colors[classification]
+	for features in km.classes[classification]:
+		plt.scatter(features[0], features[1], color = color,s = 130)
+
+plt.show()
