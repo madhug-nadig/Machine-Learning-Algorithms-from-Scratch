@@ -54,20 +54,25 @@ class K_Means:
 		classification = distances.index(min(distances))
 		return classification
 
-X = np.array([[1,2],[1,1],[1.5,1.4],[4,4],[4,6],[5,5],[6,8], [3,1],[2,2],[9,9],[5,5],[1,0.5],[7,7]])
+def main();
 
-km = K_Means(3)
-km.fit(X)
+	X = np.array([[1,2],[1,1],[1.5,1.4],[4,4],[4,6],[5,5],[6,8], [3,1],[2,2],[9,9],[5,5],[1,0.5],[7,7]])
 
-# Plotting starts here
-colors = 10*["r", "g", "c", "b", "k"]
+	km = K_Means(3)
+	km.fit(X)
 
-for centroid in km.centroids:
-	plt.scatter(km.centroids[centroid][0], km.centroids[centroid][1], s = 130, marker = "x")
+	# Plotting starts here
+	colors = 10*["r", "g", "c", "b", "k"]
 
-for classification in km.classes:
-	color = colors[classification]
-	for features in km.classes[classification]:
-		plt.scatter(features[0], features[1], color = color,s = 130)
+	for centroid in km.centroids:
+		plt.scatter(km.centroids[centroid][0], km.centroids[centroid][1], s = 130, marker = "x")
 
-plt.show()
+	for classification in km.classes:
+		color = colors[classification]
+		for features in km.classes[classification]:
+			plt.scatter(features[0], features[1], color = color,s = 130)
+
+	plt.show()
+
+if __name__ == "__main__":
+	main()
