@@ -4,6 +4,7 @@
 #----------------------------------------------------------------------------------------------------------------
 #================================================================================================================
 
+# Details of implementation/tutorial is in : http://madhugnadig.com/articles/machine-learning/2017/01/13/implementing-k-nearest-neighbours-from-scratch-in-python.html
 
 import math
 import numpy as np

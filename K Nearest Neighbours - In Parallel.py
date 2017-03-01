@@ -4,6 +4,7 @@
 #----------------------------------------------------------------------------------------------------------------
 #================================================================================================================
 
+# Details of implementation/tutorial is in : http://madhugnadig.com/articles/machine-learning/parallel-processing/2017/02/10/implementing-k-nearest-neighbours-in-parallel-from-scratch.html
 
 import math
 import numpy as np
