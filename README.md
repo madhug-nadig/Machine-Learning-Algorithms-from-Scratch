@@ -14,7 +14,10 @@ Implementing machine learning algorithms from scratch.
 
 4. Decision Trees
 
-5. K Nearest Neighbours.  
+5. K Nearest Neighbours.
+   K Nearest Neighbours in Parallel
    Dataset: Chronic Kidney disease data from UCI
 
 6. A-Star Algorithm
+
+7. K Means Clustering
