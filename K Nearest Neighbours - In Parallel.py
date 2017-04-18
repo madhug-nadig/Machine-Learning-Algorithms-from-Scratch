@@ -120,7 +120,7 @@ def main():
 		training_set[record[-1]].append(record[:-1]) # Append the list in the dict will all the elements of the record except the class
 
 	#Insert data into the test set
-	for record in training_data:
+	for record in test_data:
 		test_set[record[-1]].append(record[:-1]) # Append the list in the dict will all the elements of the record except the class
 	
 	s = time.clock()
