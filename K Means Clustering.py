@@ -8,7 +8,7 @@
 
 
 import numpy as np
-import matplotlib.pyplot as plt, mpld3
+import matplotlib.pyplot as plt
 from matplotlib import style
 import pandas as pd 
 
@@ -87,7 +87,7 @@ def main():
 		for features in km.classes[classification]:
 			plt.scatter(features[0], features[1], color = color,s = 30)
 	
-	mpld3.show()
+	plt.show()
 
 if __name__ == "__main__":
 	main()

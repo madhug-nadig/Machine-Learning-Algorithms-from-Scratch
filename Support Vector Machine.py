@@ -75,7 +75,7 @@ class CustomSVM:
 			self.W = options[norms][0]
 			self.b = options[norms][1]
 			
-			latest_optimum = options[norm][0][0] + step*2
+			latest_optimum = options[norms][0][0] + step*2
 
 	def predict(self, attrs):
 		#sign of the X(i).W + b defines the class
