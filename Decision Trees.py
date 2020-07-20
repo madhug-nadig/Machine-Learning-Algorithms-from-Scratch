@@ -4,6 +4,7 @@
 #----------------------------------------------------------------------------------------------------------------
 #================================================================================================================
 from math import log
+import pandas as pd
 
 def majorityCnt(classList):
 	classCount={}
@@ -27,6 +28,7 @@ def calcShannonEnt(dataSet):
 		prob = float(labelCounts[key])/numEntries
 		shannonEnt -= prob * log(prob,2)
 	return shannonEnt
+
 def createDataSet():
 	dataSet = [[1, 1, 'yes'],
 	         [1, 1, 'yes'],             #just an example
@@ -82,4 +84,29 @@ def createTree(dataSet,labels):
 		myTree[bestFeatLabel][value] = createTree(splitDataSet\
 		                   (dataSet, bestFeat, value),subLabels)
 	return myTree
-print(createTree(myDat,labels))
+
+def main():
+	df = pd.read_csv(r".\data\titanic.csv") #Reading from the data file
+	# Sex param
+    df.replace('male', 0, inplace = True)
+    df.replace('female', 1, inplace = True)
+
+    # Embarked param
+    df.replace('S', 0, inplace = True)
+    df.replace('C', 1, inplace = True)
+    df.replace('Q', 2, inplace = True)
+
+    dataset = df.astype(float).values.tolist()
+    #Shuffle the dataset
+    random.shuffle(dataset) #import random for this
+ 	
+	#20% of the available data will be used for testing
+
+    test_size = 0.2
+
+    #The keys of the dict are the classes that the data is classified into
+
+    training_set = {0: [], 1:[]}
+    test_set = {0: [], 1: []}
+
+	print(createTree(myDat,labels))
