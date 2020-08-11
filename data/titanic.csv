@@ -1,3 +1,4 @@
+pclass,sex,age,embarked,sibsp,parch,survived
 1,female,29,0,0,S,1
 1,male,0.9167,1,2,S,1
 1,female,2,1,2,S,0
