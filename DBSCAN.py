@@ -8,6 +8,7 @@ import numpy as np
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
 import collections
+from itertools import cycle, islice
 import matplotlib.pyplot as plt
 import queue
 
@@ -81,3 +82,45 @@ class CustomDBSCAN():
                 cluster += 1  # Move on to the next cluster
 
         return point_label, cluster
+
+    # Visualize the clusters
+    def visualize(self, data, cluster, numberOfClusters):
+        N = len(data)
+
+        colors = np.array(list(islice(cycle(['#FE4A49', '#2AB7CA']), 3)))
+
+        for i in range(numberOfClusters):
+            if (i == 0):
+                # Plot all outliers point as black
+                color = '#000000'
+            else:
+                color = colors[i]
+
+            x, y = [], []
+            for j in range(N):
+                if cluster[j] == i:
+                    x.append(data[j, 0])
+                    y.append(data[j, 1])
+            plt.scatter(x, y, c=color, alpha=1, marker='.')
+
+
+def main():
+
+    n_samples = 500
+    dataset = datasets.make_circles(n_samples=n_samples, factor=.5,
+                                    noise=.08)
+    X, y = dataset
+
+    # normalize dataset
+    X = StandardScaler().fit_transform(X)
+    print(X)
+    custom_DBSCAN = CustomDBSCAN()
+    point_label, cl = custom_DBSCAN.fit(X, 0.25, 4)
+    print(point_label, cl)
+
+    custom_DBSCAN.visualize(X, point_label, cl)
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
