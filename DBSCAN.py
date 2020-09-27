@@ -7,10 +7,10 @@
 import numpy as np
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
-import collections
 from itertools import cycle, islice
 import matplotlib.pyplot as plt
 import queue
+import pandas as pd
 
 
 class CustomDBSCAN():
@@ -94,7 +94,7 @@ class CustomDBSCAN():
                 # Plot all outliers point as black
                 color = '#000000'
             else:
-                color = colors[i]
+                color = colors[i % len(colors)]
 
             x, y = [], []
             for j in range(N):
@@ -102,24 +102,25 @@ class CustomDBSCAN():
                     x.append(data[j, 0])
                     y.append(data[j, 1])
             plt.scatter(x, y, c=color, alpha=1, marker='.')
+        plt.show()
 
 
 def main():
 
-    n_samples = 500
-    dataset = datasets.make_circles(n_samples=n_samples, factor=.5,
-                                    noise=.08)
-    X, y = dataset
+    # Reading from the data file
+    df = pd.read_csv("./data/concentric_circles.csv")
+
+    dataset = df.astype(float).values.tolist()
 
     # normalize dataset
-    X = StandardScaler().fit_transform(X)
-    print(X)
-    custom_DBSCAN = CustomDBSCAN()
-    point_label, cl = custom_DBSCAN.fit(X, 0.25, 4)
-    print(point_label, cl)
+    X = StandardScaler().fit_transform(dataset)
 
-    custom_DBSCAN.visualize(X, point_label, cl)
-    plt.show()
+    custom_DBSCAN = CustomDBSCAN()
+    point_labels, clusters = custom_DBSCAN.fit(X, 0.25, 4)
+
+    print(point_labels, clusters)
+
+    custom_DBSCAN.visualize(X, point_labels, clusters)
 
 
 if __name__ == "__main__":
