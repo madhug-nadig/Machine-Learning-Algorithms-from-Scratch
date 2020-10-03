@@ -19,7 +19,7 @@ class CustomDBSCAN():
         self.border = -2
 
     # Find all neighbour points at epsilon distance
-    def neighbor_points(self, data, pointId, epsilon):
+    def neighbour_points(self, data, pointId, epsilon):
         points = []
         for i in range(len(data)):
             # Euclidian distance
@@ -39,7 +39,7 @@ class CustomDBSCAN():
 
         # Find the neighbours of each individual point
         for i in range(len(data)):
-            point_count.append(self.neighbor_points(data, i, Eps))
+            point_count.append(self.neighbour_points(data, i, Eps))
 
         # Find all the core points, border points and outliers
         for i in range(len(point_count)):
