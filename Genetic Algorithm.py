@@ -3,14 +3,6 @@ import copy
 import numpy as np
 import pandas as pd
 
-required_hourly_cron_capacity = [
-    [0, 0, 0, 0, 0, 0, 4, 4, 4, 2, 2, 2, 6, 6, 2, 2, 2, 6, 6, 6, 2, 2, 2, 2],
-    [0, 0, 0, 0, 0, 0, 4, 4, 4, 2, 2, 2, 6, 6, 2, 2, 2, 6, 6, 6, 2, 2, 2, 2],
-    [0, 0, 0, 0, 0, 0, 4, 4, 4, 2, 2, 2, 6, 6, 2, 2, 2, 6, 6, 6, 2, 2, 2, 2],
-    [0, 0, 0, 0, 0, 0, 4, 4, 4, 2, 2, 2, 6, 6, 2, 2, 2, 6, 6, 6, 2, 2, 2, 2],
-    [0, 0, 0, 0, 0, 0, 4, 4, 4, 2, 2, 2, 6, 6, 2, 2, 2, 6, 6, 6, 2, 2, 2, 2]
-]
-
 
 class CustomGeneticAlgorithm():
 
@@ -51,7 +43,7 @@ class CustomGeneticAlgorithm():
             day_planning = []
             for server_id in range(n_servers):
                 start_time = np.random.randint(0, 23)
-                duration = np.random.randint(0, 10)
+                duration = np.random.randint(0, 12)
                 server = [server_id, start_time, duration]
                 day_planning.append(server)
 
@@ -73,7 +65,7 @@ class CustomGeneticAlgorithm():
         undercapacity = abs(deviation[deviation < 0].sum())
 
         overcapacity_cost = 1
-        undercapacity_cost = 1
+        undercapacity_cost = 5
 
         fitness = overcapacity_cost * overcapacity + undercapacity_cost * undercapacity
         return fitness
@@ -106,7 +98,7 @@ class CustomGeneticAlgorithm():
             rand1 = np.random.randint(0, size1)
             rand2 = np.random.randint(0, size2)
             rand3 = np.random.randint(0, 2)
-            parent[rand1, rand2, rand3] = np.random.randint(0, 10)
+            parent[rand1, rand2, rand3] = np.random.randint(0, 12)
         return parent
 
     def mutate_gen(self, population, n_mutations):
@@ -116,7 +108,7 @@ class CustomGeneticAlgorithm():
         return mutated_population
 
     def is_acceptable(self, parent):
-        return np.logical_not((np.array(parent)[:, :, 2:] > 10).any())
+        return np.logical_not((np.array(parent)[:, :, 2:] > 12).any())
 
     def select_acceptable(self, population):
         population = [
@@ -149,7 +141,7 @@ class CustomGeneticAlgorithm():
         population_size = 500
 
         population = self.generate_initial_population(
-            population_size=population_size, n_days=5, n_servers=11)
+            population_size=population_size, n_days=5, n_servers=24)
         for _ in range(n_iterations):
             population = self.select_acceptable(population)
             population = self.select_best(
@@ -164,6 +156,18 @@ class CustomGeneticAlgorithm():
 
 
 def main():
+
+    # Reading from the data file
+    df = pd.read_csv("./data/cron_jobs_schedule.csv")
+
+    dataset = df.astype(int).values.tolist()
+
+    required_hourly_cron_capacity = [
+        [0 for _ in range(24)] for _ in range(5)]
+
+    for record in dataset:
+        required_hourly_cron_capacity[record[1]][record[2]] += record[3]
+
     genetic_algorithm = CustomGeneticAlgorithm()
     optimal_schedule = genetic_algorithm.run(
         required_hourly_cron_capacity, n_iterations=100)
