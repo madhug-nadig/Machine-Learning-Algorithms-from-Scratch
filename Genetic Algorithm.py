@@ -37,25 +37,25 @@ class CustomGeneticAlgorithm():
             deployed_hourly_cron_capacity_week).sum(axis=1)
         return deployed_hourly_cron_capacity_week
 
-    def generate_random_plan(self, n_days, n_servers):
+    def generate_random_plan(self, n_days, n_racks):
         period_planning = []
         for _ in range(n_days):
             day_planning = []
-            for server_id in range(n_servers):
+            for server_id in range(n_racks):
                 start_time = np.random.randint(0, 23)
-                duration = np.random.randint(0, 12)
-                server = [server_id, start_time, duration]
+                machines = np.random.randint(0, 12)
+                server = [server_id, start_time, machines]
                 day_planning.append(server)
 
             period_planning.append(day_planning)
 
         return period_planning
 
-    def generate_initial_population(self, population_size, n_days=7, n_servers=11):
+    def generate_initial_population(self, population_size, n_days=7, n_racks=11):
         population = []
         for _ in range(population_size):
             member = self.generate_random_plan(
-                n_days=n_days, n_servers=n_servers)
+                n_days=n_days, n_racks=n_racks)
             population.append(member)
         return population
 
@@ -64,8 +64,8 @@ class CustomGeneticAlgorithm():
         overcapacity = abs(deviation[deviation > 0].sum())
         undercapacity = abs(deviation[deviation < 0].sum())
 
-        overcapacity_cost = 1
-        undercapacity_cost = 5
+        overcapacity_cost = 0.5
+        undercapacity_cost = 3
 
         fitness = overcapacity_cost * overcapacity + undercapacity_cost * undercapacity
         return fitness
@@ -136,18 +136,16 @@ class CustomGeneticAlgorithm():
 
         return selected_parents
 
-    def run(self, required_hourly_cron_capacity, n_iterations):
-
-        population_size = 500
+    def run(self, required_hourly_cron_capacity, n_iterations, n_population_size=500):
 
         population = self.generate_initial_population(
-            population_size=population_size, n_days=5, n_servers=24)
+            population_size=n_population_size, n_days=5, n_racks=24)
         for _ in range(n_iterations):
             population = self.select_acceptable(population)
             population = self.select_best(
                 population, required_hourly_cron_capacity, n_best=100)
             population = self.crossover(
-                population, n_offspring=population_size)
+                population, n_offspring=n_population_size)
             population = self.mutate_gen(population, n_mutations=1)
 
         best_child = self.select_best(
@@ -171,7 +169,8 @@ def main():
     genetic_algorithm = CustomGeneticAlgorithm()
     optimal_schedule = genetic_algorithm.run(
         required_hourly_cron_capacity, n_iterations=100)
-    print('\nOptimal Server Schedule: \n', optimal_schedule)
+    print('\nOptimal Server Schedule: \n',
+          genetic_algorithm.deployed_to_hourlyplanning(optimal_schedule[0]))
 
 
 if __name__ == "__main__":
