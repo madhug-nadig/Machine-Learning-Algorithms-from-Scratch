@@ -25,3 +25,6 @@ Implementing machine learning algorithms from scratch.
    Dataset: IPL player stats norm data
 
 8. Support Vector Machine
+
+9. Reinforcement Learning:
+   - Deep Q Network  
